@@ -233,15 +233,24 @@ def display_info_table(data_dict):
             st.write(f"**{value}**")
 
 
-def get_summary_stats(data):
+def get_summary_stats(data, use_average=False):
     """Calculate summary statistics for a group"""
-    stats = {
-        "시군구 수": len(data),
-        "총 인구": format_number(data["POP_23"].sum()),
-        "평균 인구밀도": f"{data['PDEN_23'].mean():.1f}",
-        "총 가구수": format_number(data["HHLD_23"].sum()),
-        "평균 통근시간": f"{data['COM_T_20'].mean():.1f}분",
-    }
+    if use_average:
+        stats = {
+            "시군구 수": len(data),
+            "평균 인구": format_number(data["POP_23"].mean()),
+            "평균 인구밀도": f"{data['PDEN_23'].mean():.1f}",
+            "평균 가구수": format_number(data["HHLD_23"].mean()),
+            "평균 통근시간": f"{data['COM_T_20'].mean():.1f}분",
+        }
+    else:
+        stats = {
+            "시군구 수": len(data),
+            "총 인구": format_number(data["POP_23"].sum()),
+            "평균 인구밀도": f"{data['PDEN_23'].mean():.1f}",
+            "총 가구수": format_number(data["HHLD_23"].sum()),
+            "평균 통근시간": f"{data['COM_T_20'].mean():.1f}분",
+        }
     return stats
 
 
@@ -359,7 +368,7 @@ with col_info:
     with tab2:
         st.markdown('<p class="section-title">인구감소지역</p>', unsafe_allow_html=True)
         pop_dec_df = df[df["POP_DEC_LB"] == "인구감소지역"]
-        dec_stats = get_summary_stats(pop_dec_df)
+        dec_stats = get_summary_stats(pop_dec_df, use_average=True)
         display_info_table(dec_stats)
 
         st.markdown("---")
@@ -374,7 +383,7 @@ with col_info:
             '<p class="section-title">비인구감소지역</p>', unsafe_allow_html=True
         )
         non_dec_df = df[df["POP_DEC_LB"] == "비인구감소지역"]
-        non_stats = get_summary_stats(non_dec_df)
+        non_stats = get_summary_stats(non_dec_df, use_average=True)
         display_info_table(non_stats)
 
         st.markdown("---")
