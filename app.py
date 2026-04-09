@@ -354,9 +354,13 @@ with col_map:
     )
 
     # Process selection
-    if selected and selected.selection and selected.selection.point_indices:
-        idx = selected.selection.point_indices[0]
-        st.session_state.selected_sigungu = df.iloc[idx]["SIGUNGU_CD"]
+    if selected and selected.selection and selected.selection.points:
+        point = selected.selection.points[0]
+        if "location" in point:
+            st.session_state.selected_sigungu = point["location"]
+        elif "pointIndex" in point:
+            idx = point["pointIndex"]
+            st.session_state.selected_sigungu = df.iloc[idx]["SIGUNGU_CD"]
 
 
 with col_info:
