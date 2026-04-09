@@ -591,7 +591,7 @@ else:
 st.markdown(
     """
 <div style="text-align: center; padding: 30px 0 10px 0; color: #444; font-size: 0.75rem;">
-    <p>Data: 국가관심지점정보, 통계청 SGIS/KOSIS | Built with Streamlit & Plotly</p>
+    <p>Data: SGIS/KOSIS | Built with Streamlit & Plotly</p>
     <p>© 2026 서울대학교 USDL</p>
 </div>
 """,
