@@ -254,16 +254,26 @@ def get_summary_stats(data, use_average=False):
     return stats
 
 
-def get_facility_stats(data):
+def get_facility_stats(data, use_average=False):
     """Calculate facility statistics"""
-    stats = {
-        "생활시설 (LIV)": format_number(data["LIV_23"].sum()),
-        "의료시설 (MED)": format_number(data["MED_23"].sum()),
-        "돌봄시설 (CARE)": format_number(data["CARE_23"].sum()),
-        "교육시설 (EDU)": format_number(data["EDU_23"].sum()),
-        "문화시설 (CUL)": format_number(data["CUL_23"].sum()),
-        "체육시설 (SPT)": format_number(data["SPT_23"].sum()),
-    }
+    if use_average:
+        stats = {
+            "생활시설 (LIV)": format_number(data["LIV_23"].mean()),
+            "의료시설 (MED)": format_number(data["MED_23"].mean()),
+            "돌봄시설 (CARE)": format_number(data["CARE_23"].mean()),
+            "교육시설 (EDU)": format_number(data["EDU_23"].mean()),
+            "문화시설 (CUL)": format_number(data["CUL_23"].mean()),
+            "체육시설 (SPT)": format_number(data["SPT_23"].mean()),
+        }
+    else:
+        stats = {
+            "생활시설 (LIV)": format_number(data["LIV_23"].sum()),
+            "의료시설 (MED)": format_number(data["MED_23"].sum()),
+            "돌봄시설 (CARE)": format_number(data["CARE_23"].sum()),
+            "교육시설 (EDU)": format_number(data["EDU_23"].sum()),
+            "문화시설 (CUL)": format_number(data["CUL_23"].sum()),
+            "체육시설 (SPT)": format_number(data["SPT_23"].sum()),
+        }
     return stats
 
 
@@ -375,7 +385,7 @@ with col_info:
         st.markdown(
             '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
         )
-        dec_facility = get_facility_stats(pop_dec_df)
+        dec_facility = get_facility_stats(pop_dec_df, use_average=True)
         display_info_table(dec_facility)
 
     with tab3:
@@ -390,7 +400,7 @@ with col_info:
         st.markdown(
             '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
         )
-        non_facility = get_facility_stats(non_dec_df)
+        non_facility = get_facility_stats(non_dec_df, use_average=True)
         display_info_table(non_facility)
 
 
