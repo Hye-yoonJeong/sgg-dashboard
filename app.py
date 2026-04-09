@@ -287,7 +287,7 @@ with col_map:
     fig = px.choropleth_mapbox(
         df,
         geojson=geojson_data,
-        locations=df.index,
+        locations="SIGUNGU_CD",
         featureidkey="properties.SIGUNGU_CD",
         color="POP_DEC_LB",
         color_discrete_map={"인구감소지역": "#E07A5F", "비인구감소지역": "#5A7D9A"},
