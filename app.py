@@ -190,6 +190,33 @@ st.markdown(
         }
     }
     
+    /* Chart containers responsive height */
+    @media (min-width: 1600px) {
+        /* 지도 */
+        [data-testid="column"]:first-child .stPlotlyChart {
+            height: 45vh !important;
+        }
+        [data-testid="column"]:first-child .stPlotlyChart > div {
+            height: 45vh !important;
+        }
+        
+        /* 랭킹 차트 */
+        [data-testid="column"]:nth-child(2) .stPlotlyChart {
+            height: 30vh !important;
+        }
+        [data-testid="column"]:nth-child(2) .stPlotlyChart > div {
+            height: 30vh !important;
+        }
+        
+        /* 시계열 차트 */
+        [data-testid="column"]:nth-child(3) .stPlotlyChart {
+            height: 15vh !important;
+        }
+        [data-testid="column"]:nth-child(3) .stPlotlyChart > div {
+            height: 15vh !important;
+        }
+    }
+    
     /* Metric styling */
     [data-testid="stMetricValue"] {
         font-size: 1.2rem;
