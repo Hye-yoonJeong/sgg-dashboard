@@ -144,7 +144,7 @@ st.markdown(
     }
 
     /* Large desktop: fit in viewport, no scroll */
-    @media (min-width: 1200px) {
+    @media (min-width: 1600px) {
         .main .block-container {
             max-height: 100vh;
             overflow: hidden;
@@ -157,7 +157,7 @@ st.markdown(
     }
 
     /* Medium screen (halved window) & Mobile: allow scroll */
-    @media (max-width: 1199px) {
+    @media (max-width: 1599px) {
         .main .block-container {
             overflow-y: auto;
             max-height: none;
