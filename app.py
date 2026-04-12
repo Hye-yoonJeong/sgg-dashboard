@@ -29,7 +29,7 @@ st.markdown(
     }
     
     .main, .stApp {
-        background: #f8f9fa;
+        background: #ffffff;
     }
     
     h1, h2, h3, h4 {
@@ -42,14 +42,14 @@ st.markdown(
     }
     
     .section-title {
-        color: #6366f1 !important;
+        color: #4a5568 !important;
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1.5px;
         margin-bottom: 12px;
         padding-bottom: 8px;
-        border-bottom: 2px solid #6366f1;
+        border-bottom: 2px solid #4a5568;
     }
     
     .region-name {
@@ -100,7 +100,7 @@ st.markdown(
     
     .stTabs [aria-selected="true"] {
         background: #e0e7ff !important;
-        color: #4338ca !important;
+        color: #4a5568 !important;
     }
     
     /* Select box */
@@ -122,7 +122,7 @@ st.markdown(
         bottom: 0;
         left: 0;
         right: 0;
-        background: #f8f9fa;
+        background: #ffffff;
         padding: 5px 0;
         text-align: center;
         color: #718096;
@@ -365,7 +365,7 @@ st.markdown(
 
 # ========== Layout ==========
 # 화면 크기에 따라 레이아웃 조정 (Streamlit은 자동으로 좁은 화면에서 세로 스택)
-col_left, col_center, col_right = st.columns([1, 1, 1], gap="medium")
+col_left, col_center, col_right = st.columns([1, 1, 2], gap="medium")
 
 with col_left:
     # ===== MAP =====
@@ -402,7 +402,7 @@ with col_left:
 
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0),
-        paper_bgcolor="#f8f9fa",
+        paper_bgcolor="#ffffff",
         plot_bgcolor="#ffffff",
         font=dict(family="Noto Sans KR", color="#4a5568"),
         legend=dict(
@@ -527,7 +527,7 @@ with col_left:
 
         fig_compare.update_layout(
             barmode="group",
-            paper_bgcolor="#f8f9fa",
+            paper_bgcolor="#ffffff",
             plot_bgcolor="#ffffff",
             font=dict(color="#4a5568", size=10),
             legend=dict(
@@ -623,7 +623,7 @@ with col_center:
         )
 
         fig_rank.update_layout(
-            paper_bgcolor="#f8f9fa",
+            paper_bgcolor="#ffffff",
             plot_bgcolor="#ffffff",
             font=dict(color="#4a5568", size=10),
             xaxis=dict(
@@ -754,7 +754,7 @@ with col_right:
                     text="인구밀도 변화 (2015-2024)",
                     font=dict(size=14, color="#2d3748"),
                 ),
-                paper_bgcolor="#f8f9fa",
+                paper_bgcolor="#ffffff",
                 plot_bgcolor="#ffffff",
                 font=dict(color="#4a5568"),
                 xaxis=dict(
@@ -792,7 +792,7 @@ with col_right:
                     text="생활시설 변화 (2015-2024)",
                     font=dict(size=14, color="#2d3748"),
                 ),
-                paper_bgcolor="#f8f9fa",
+                paper_bgcolor="#ffffff",
                 plot_bgcolor="#ffffff",
                 font=dict(color="#4a5568"),
                 xaxis=dict(
