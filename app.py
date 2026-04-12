@@ -748,7 +748,7 @@ with col_center:
                 tickfont=dict(color="#4a5568"),
             ),
             margin=dict(l=20, r=20, t=20, b=80),
-            height=200,
+            height=300,
             showlegend=False,
             dragmode=False,
         )
