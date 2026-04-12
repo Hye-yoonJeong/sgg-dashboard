@@ -116,6 +116,27 @@ st.markdown(
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
+    /* Footer fixed at bottom */
+    .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #f8f9fa;
+        padding: 5px 0;
+        text-align: center;
+        color: #718096;
+        font-size: 0.65rem;
+        z-index: 1000;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 767px) {
+        .footer {
+            position: relative;
+        }
+    }
+    
     .block-container {
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
@@ -759,7 +780,7 @@ with col_right:
 # ========== Footer ==========
 st.markdown(
     """
-<div style="text-align: center; padding: 5px 0; color: #718096; font-size: 0.65rem;">
+<div class="footer">
     Data: SGIS/KOSIS | © 2026 서울대학교 USDL
 </div>
 """,
