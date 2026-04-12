@@ -441,7 +441,7 @@ with col_left:
             font=dict(color="white", size=11),
             title="",
         ),
-        height=280,
+        height=450,
     )
 
     selected = st.plotly_chart(
@@ -572,7 +572,7 @@ with col_left:
             xaxis=dict(gridcolor="#e2e8f0", tickangle=45),
             yaxis=dict(gridcolor="#e2e8f0", type="log"),
             margin=dict(l=20, r=20, t=40, b=80),
-            height=180,
+            height=350,
         )
 
         st.plotly_chart(
@@ -670,7 +670,7 @@ with col_center:
                 tickfont=dict(color="#4a5568"),
             ),
             margin=dict(l=20, r=20, t=20, b=80),
-            height=180,
+            height=300,
             showlegend=False,
         )
 
@@ -807,7 +807,7 @@ with col_right:
                     fixedrange=True,
                 ),
                 margin=dict(l=20, r=20, t=40, b=20),
-                height=100,
+                height=150,
                 showlegend=False,
                 dragmode=False,
             )
@@ -856,7 +856,7 @@ with col_right:
                     fixedrange=True,
                 ),
                 margin=dict(l=20, r=20, t=40, b=20),
-                height=100,
+                height=150,
                 showlegend=False,
                 dragmode=False,
             )
