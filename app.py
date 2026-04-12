@@ -758,15 +758,22 @@ with col_right:
                 plot_bgcolor="#ffffff",
                 font=dict(color="#4a5568"),
                 xaxis=dict(
-                    gridcolor="#e2e8f0", tickfont=dict(size=10, color="#4a5568")
+                    gridcolor="#e2e8f0",
+                    tickfont=dict(size=10, color="#4a5568"),
+                    fixedrange=True,
                 ),
                 yaxis=dict(
-                    gridcolor="#e2e8f0", tickfont=dict(size=10, color="#4a5568")
+                    gridcolor="#e2e8f0",
+                    tickfont=dict(size=10, color="#4a5568"),
+                    fixedrange=True,
                 ),
                 margin=dict(l=20, r=20, t=40, b=20),
-                height=250,
+                height=150,
                 showlegend=False,
+                dragmode=False,
             )
+
+            fig_pden.update_traces(hovertemplate="%{x}: %{y:.1f}<extra></extra>")
 
             st.plotly_chart(fig_pden, use_container_width=True)
 
@@ -796,15 +803,22 @@ with col_right:
                 plot_bgcolor="#ffffff",
                 font=dict(color="#4a5568"),
                 xaxis=dict(
-                    gridcolor="#e2e8f0", tickfont=dict(size=10, color="#4a5568")
+                    gridcolor="#e2e8f0",
+                    tickfont=dict(size=10, color="#4a5568"),
+                    fixedrange=True,
                 ),
                 yaxis=dict(
-                    gridcolor="#e2e8f0", tickfont=dict(size=10, color="#4a5568")
+                    gridcolor="#e2e8f0",
+                    tickfont=dict(size=10, color="#4a5568"),
+                    fixedrange=True,
                 ),
                 margin=dict(l=20, r=20, t=40, b=20),
-                height=250,
+                height=150,
                 showlegend=False,
+                dragmode=False,
             )
+
+            fig_liv.update_traces(hovertemplate="%{x}: %{y:.0f}<extra></extra>")
 
             st.plotly_chart(fig_liv, use_container_width=True)
 
