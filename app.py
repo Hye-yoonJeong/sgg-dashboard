@@ -28,49 +28,45 @@ st.markdown(
         font-family: 'Noto Sans KR', sans-serif;
     }
     
-    .main {
-        background: linear-gradient(180deg, #0f1419 0%, #1a1f2e 100%);
-    }
-    
-    .stApp {
-        background: linear-gradient(180deg, #0f1419 0%, #1a1f2e 100%);
+    .main, .stApp {
+        background: #f8f9fa;
     }
     
     h1, h2, h3, h4 {
-        color: #ffffff !important;
+        color: #2d3748 !important;
         font-weight: 700 !important;
     }
     
     p, span, label {
-        color: #e0e0e0 !important;
+        color: #4a5568 !important;
     }
     
     .section-title {
-        color: #667eea !important;
+        color: #6366f1 !important;
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1.5px;
         margin-bottom: 12px;
         padding-bottom: 8px;
-        border-bottom: 2px solid #667eea;
+        border-bottom: 2px solid #6366f1;
     }
     
     .region-name {
         font-size: 1.5rem;
         font-weight: 900;
-        color: #fff !important;
+        color: #1a202c !important;
         margin-bottom: 4px;
     }
     
     .region-sub {
         font-size: 0.9rem;
-        color: #888 !important;
+        color: #718096 !important;
     }
     
     .pop-decrease {
-        background: rgba(224, 122, 95, 0.2);
-        color: #E07A5F !important;
+        background: #fed7d7;
+        color: #c53030 !important;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 0.8rem;
@@ -78,8 +74,8 @@ st.markdown(
     }
     
     .pop-stable {
-        background: rgba(90, 125, 154, 0.2);
-        color: #5A7D9A !important;
+        background: #bee3f8;
+        color: #2b6cb0 !important;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 0.8rem;
@@ -89,29 +85,30 @@ st.markdown(
     /* Tab styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
-        background: rgba(255,255,255,0.02);
+        background: #ffffff;
         padding: 8px;
         border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     
     .stTabs [data-baseweb="tab"] {
         background: transparent;
         border-radius: 8px;
-        color: #888;
+        color: #718096;
         padding: 8px 16px;
     }
     
     .stTabs [aria-selected="true"] {
-        background: rgba(102, 126, 234, 0.2) !important;
-        color: #667eea !important;
+        background: #e0e7ff !important;
+        color: #4338ca !important;
     }
     
     /* Select box */
     .stSelectbox > div > div {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
         border-radius: 8px;
-        color: #fff;
+        color: #2d3748;
     }
     
     /* Hide Streamlit branding */
@@ -128,11 +125,11 @@ st.markdown(
     /* Metric styling */
     [data-testid="stMetricValue"] {
         font-size: 1.2rem;
-        color: #fff;
+        color: #1a202c;
     }
     
     [data-testid="stMetricLabel"] {
-        color: #888;
+        color: #718096;
     }
     
     /* Scrollbar */
@@ -142,11 +139,11 @@ st.markdown(
     }
     
     ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.02);
+        background: #f1f5f9;
     }
     
     ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.1);
+        background: #cbd5e1;
         border-radius: 3px;
     }
 </style>
@@ -309,8 +306,11 @@ with col_left:
         locations="SIGUNGU_CD",
         featureidkey="properties.SIGUNGU_CD",
         color="POP_DEC_LB",
-        color_discrete_map={"인구감소지역": "#E07A5F", "비인구감소지역": "#5A7D9A"},
-        mapbox_style="carto-darkmatter",
+        color_discrete_map={
+            "인구감소지역": "#f87171",  # pastel red
+            "비인구감소지역": "#60a5fa",  # pastel blue
+        },
+        mapbox_style="carto-positron",  # light map style
         center={"lat": 36.5, "lon": 127.8},
         zoom=5.8,
         opacity=0.7,
@@ -333,9 +333,9 @@ with col_left:
 
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Noto Sans KR"),
+        paper_bgcolor="#f8f9fa",
+        plot_bgcolor="#ffffff",
+        font=dict(family="Noto Sans KR", color="#4a5568"),
         legend=dict(
             yanchor="top",
             y=0.99,
@@ -370,12 +370,6 @@ with col_left:
         st.markdown('<p class="section-title">전국 현황</p>', unsafe_allow_html=True)
         total_stats = get_summary_stats(df, use_average=False)
         display_info_table(total_stats)
-        # st.markdown("---")
-        # st.markdown(
-        #     '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
-        # )
-        # facility_stats = get_facility_stats(df, use_average=False)
-        # display_info_table(facility_stats)
 
     with tab2:
         st.markdown(
@@ -384,12 +378,6 @@ with col_left:
         pop_dec_df = df[df["POP_DEC_LB"] == "인구감소지역"]
         dec_stats = get_summary_stats(pop_dec_df, use_average=True)
         display_info_table(dec_stats)
-        # st.markdown("---")
-        # st.markdown(
-        #     '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
-        # )
-        # dec_facility = get_facility_stats(pop_dec_df, use_average=True)
-        # display_info_table(dec_facility)
 
     with tab3:
         st.markdown(
@@ -398,12 +386,6 @@ with col_left:
         non_dec_df = df[df["POP_DEC_LB"] == "비인구감소지역"]
         non_stats = get_summary_stats(non_dec_df, use_average=True)
         display_info_table(non_stats)
-        # st.markdown("---")
-        # st.markdown(
-        #     '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
-        # )
-        # non_facility = get_facility_stats(non_dec_df, use_average=True)
-        # display_info_table(non_facility)
 
     with tab4:
         st.markdown(
@@ -462,7 +444,7 @@ with col_left:
                 name="인구감소지역",
                 x=compare_data["지표"],
                 y=compare_data["인구감소지역"],
-                marker_color="#E07A5F",
+                marker_color="#f87171",  # 인구감소지역
             )
         )
         fig_compare.add_trace(
@@ -470,15 +452,15 @@ with col_left:
                 name="비인구감소지역",
                 x=compare_data["지표"],
                 y=compare_data["비인구감소지역"],
-                marker_color="#5A7D9A",
+                marker_color="#60a5fa",  # 비인구감소지역
             )
         )
 
         fig_compare.update_layout(
             barmode="group",
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#888", size=10),
+            paper_bgcolor="#f8f9fa",
+            plot_bgcolor="#ffffff",
+            font=dict(color="#4a5568", size=10),
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
@@ -487,8 +469,8 @@ with col_left:
                 x=1,
                 bgcolor="rgba(0,0,0,0)",
             ),
-            xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickangle=45),
-            yaxis=dict(gridcolor="rgba(255,255,255,0.05)", type="log"),
+            xaxis=dict(gridcolor="#e2e8f0", tickangle=45),
+            yaxis=dict(gridcolor="#e2e8f0", type="log"),
             margin=dict(l=20, r=20, t=40, b=80),
             height=350,
         )
@@ -501,20 +483,36 @@ with col_center:
     st.markdown('<p class="section-title">시군구 선택</p>', unsafe_allow_html=True)
 
     sigungu_list = (df["SIDO_NM"] + " " + df["SIGUNGU_NM"]).tolist()
+
+    # 현재 선택된 시군구의 인덱스 찾기
+    default_index = 0
+    if st.session_state.selected_sigungu:
+        selected_row = df[df["SIGUNGU_CD"] == st.session_state.selected_sigungu]
+        if len(selected_row) > 0:
+            selected_label = (
+                selected_row["SIDO_NM"].values[0]
+                + " "
+                + selected_row["SIGUNGU_NM"].values[0]
+            )
+            if selected_label in sigungu_list:
+                default_index = sigungu_list.index(selected_label) + 1
+
     selected_name = st.selectbox(
         "시군구 선택",
         options=["선택하세요"] + sigungu_list,
-        index=0,
+        index=default_index,
         label_visibility="collapsed",
     )
 
     if selected_name != "선택하세요":
-        # "서울특별시 종로구" -> "종로구" 추출
         sigungu_nm = selected_name.split(" ")[-1]
         sido_nm = " ".join(selected_name.split(" ")[:-1])
-        st.session_state.selected_sigungu = df[
+        new_sigungu_cd = df[
             (df["SIDO_NM"] == sido_nm) & (df["SIGUNGU_NM"] == sigungu_nm)
         ]["SIGUNGU_CD"].values[0]
+        if new_sigungu_cd != st.session_state.selected_sigungu:
+            st.session_state.selected_sigungu = new_sigungu_cd
+            st.rerun()
 
     st.markdown("---")
     st.markdown("👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요")
