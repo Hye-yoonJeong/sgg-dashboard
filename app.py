@@ -497,7 +497,7 @@ with col_left:
 
 
 with col_center:
-    # ===== BOARD 2: Region Selector & Details =====
+    # Board 2 will go here
     st.markdown('<p class="section-title">시군구 선택</p>', unsafe_allow_html=True)
 
     sigungu_list = (df["SIDO_NM"] + " " + df["SIGUNGU_NM"]).tolist()
@@ -519,6 +519,9 @@ with col_center:
     st.markdown("---")
     st.markdown("👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요")
 
+
+with col_right:
+    # ===== BOARD 3: Region Selector & Details =====
     # Display selected region info
     if st.session_state.selected_sigungu:
         region = df[df["SIGUNGU_CD"] == st.session_state.selected_sigungu].iloc[0]
@@ -680,12 +683,6 @@ with col_center:
         """,
             unsafe_allow_html=True,
         )
-
-
-with col_right:
-    # Board 3 will go here
-    pass
-
 
 # ========== Footer ==========
 st.markdown(
