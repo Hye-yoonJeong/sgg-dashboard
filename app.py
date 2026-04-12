@@ -143,20 +143,31 @@ st.markdown(
         max-width: 100%;
     }
 
-    /* Desktop: fit in viewport, no scroll */
-    @media (min-width: 768px) {
+    /* Large desktop: fit in viewport, no scroll */
+    @media (min-width: 1200px) {
         .main .block-container {
             max-height: 100vh;
             overflow: hidden;
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
         }
+        .footer {
+            position: fixed;
+        }
     }
 
-    /* Mobile: allow scroll */
-    @media (max-width: 767px) {
+    /* Medium screen (halved window) & Mobile: allow scroll */
+    @media (max-width: 1199px) {
         .main .block-container {
             overflow-y: auto;
+            max-height: none;
+        }
+        .footer {
+            position: relative;
+        }
+        [data-testid="column"] {
+            width: 100% !important;
+            flex: 1 1 100% !important;
         }
     }
     
@@ -334,7 +345,8 @@ st.markdown(
 
 
 # ========== Layout ==========
-col_left, col_center, col_right = st.columns([1, 1, 1])
+# 화면 크기에 따라 레이아웃 조정 (Streamlit은 자동으로 좁은 화면에서 세로 스택)
+col_left, col_center, col_right = st.columns([1, 1, 1], gap="medium")
 
 with col_left:
     # ===== MAP =====
