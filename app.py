@@ -299,10 +299,10 @@ st.markdown(
 
 
 # ========== Layout ==========
-col_map, col_info = st.columns([1.4, 0.6])
+col_left, col_center, col_right = st.columns([1, 1, 1])
 
-with col_map:
-    # Map visualization
+with col_left:
+    # ===== MAP =====
     fig = px.choropleth_mapbox(
         df,
         geojson=geojson_data,
@@ -345,15 +345,13 @@ with col_map:
             font=dict(color="white", size=11),
             title="",
         ),
-        height=500,
+        height=450,
     )
 
-    # Capture click events
     selected = st.plotly_chart(
         fig, use_container_width=True, on_select="rerun", key="map"
     )
 
-    # Process selection
     if selected and selected.selection and selected.selection.points:
         point = selected.selection.points[0]
         if "location" in point:
@@ -362,29 +360,30 @@ with col_map:
             idx = point["pointIndex"]
             st.session_state.selected_sigungu = df.iloc[idx]["SIGUNGU_CD"]
 
-
-with col_info:
-    # View mode tabs
-    tab1, tab2, tab3 = st.tabs(["📊 전국", "🔴 인구감소", "🔵 비인구감소"])
+    # ===== BOARD 1: Summary Tabs =====
+    st.markdown("---")
+    tab1, tab2, tab3, tab4 = st.tabs(
+        ["📊 전국", "🔴 인구감소", "🔵 비인구감소", "📈 비교"]
+    )
 
     with tab1:
         st.markdown('<p class="section-title">전국 현황</p>', unsafe_allow_html=True)
-        total_stats = get_summary_stats(df)
+        total_stats = get_summary_stats(df, use_average=False)
         display_info_table(total_stats)
-
         st.markdown("---")
         st.markdown(
             '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
         )
-        facility_stats = get_facility_stats(df)
+        facility_stats = get_facility_stats(df, use_average=False)
         display_info_table(facility_stats)
 
     with tab2:
-        st.markdown('<p class="section-title">인구감소지역</p>', unsafe_allow_html=True)
+        st.markdown(
+            '<p class="section-title">인구감소지역 (평균)</p>', unsafe_allow_html=True
+        )
         pop_dec_df = df[df["POP_DEC_LB"] == "인구감소지역"]
         dec_stats = get_summary_stats(pop_dec_df, use_average=True)
         display_info_table(dec_stats)
-
         st.markdown("---")
         st.markdown(
             '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
@@ -394,12 +393,11 @@ with col_info:
 
     with tab3:
         st.markdown(
-            '<p class="section-title">비인구감소지역</p>', unsafe_allow_html=True
+            '<p class="section-title">비인구감소지역 (평균)</p>', unsafe_allow_html=True
         )
         non_dec_df = df[df["POP_DEC_LB"] == "비인구감소지역"]
         non_stats = get_summary_stats(non_dec_df, use_average=True)
         display_info_table(non_stats)
-
         st.markdown("---")
         st.markdown(
             '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
@@ -407,13 +405,101 @@ with col_info:
         non_facility = get_facility_stats(non_dec_df, use_average=True)
         display_info_table(non_facility)
 
+    with tab4:
+        st.markdown(
+            '<p class="section-title">인구감소 vs 비인구감소 비교</p>',
+            unsafe_allow_html=True,
+        )
 
-# ========== Selected Region Detail ==========
-st.markdown("---")
+        # 비교 데이터 준비
+        pop_dec_df = df[df["POP_DEC_LB"] == "인구감소지역"]
+        non_dec_df = df[df["POP_DEC_LB"] == "비인구감소지역"]
 
-# Region selector
-col_select, col_empty = st.columns([0.3, 0.7])
-with col_select:
+        compare_data = pd.DataFrame(
+            {
+                "지표": [
+                    "평균 인구",
+                    "평균 인구밀도",
+                    "평균 가구수",
+                    "평균 통근시간",
+                    "생활시설",
+                    "의료시설",
+                    "돌봄시설",
+                    "교육시설",
+                    "문화시설",
+                    "체육시설",
+                ],
+                "인구감소지역": [
+                    pop_dec_df["POP_23"].mean(),
+                    pop_dec_df["PDEN_23"].mean(),
+                    pop_dec_df["HHLD_23"].mean(),
+                    pop_dec_df["COM_T_20"].mean(),
+                    pop_dec_df["LIV_23"].mean(),
+                    pop_dec_df["MED_23"].mean(),
+                    pop_dec_df["CARE_23"].mean(),
+                    pop_dec_df["EDU_23"].mean(),
+                    pop_dec_df["CUL_23"].mean(),
+                    pop_dec_df["SPT_23"].mean(),
+                ],
+                "비인구감소지역": [
+                    non_dec_df["POP_23"].mean(),
+                    non_dec_df["PDEN_23"].mean(),
+                    non_dec_df["HHLD_23"].mean(),
+                    non_dec_df["COM_T_20"].mean(),
+                    non_dec_df["LIV_23"].mean(),
+                    non_dec_df["MED_23"].mean(),
+                    non_dec_df["CARE_23"].mean(),
+                    non_dec_df["EDU_23"].mean(),
+                    non_dec_df["CUL_23"].mean(),
+                    non_dec_df["SPT_23"].mean(),
+                ],
+            }
+        )
+
+        fig_compare = go.Figure()
+        fig_compare.add_trace(
+            go.Bar(
+                name="인구감소지역",
+                x=compare_data["지표"],
+                y=compare_data["인구감소지역"],
+                marker_color="#E07A5F",
+            )
+        )
+        fig_compare.add_trace(
+            go.Bar(
+                name="비인구감소지역",
+                x=compare_data["지표"],
+                y=compare_data["비인구감소지역"],
+                marker_color="#5A7D9A",
+            )
+        )
+
+        fig_compare.update_layout(
+            barmode="group",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(color="#888", size=10),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1,
+                bgcolor="rgba(0,0,0,0)",
+            ),
+            xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickangle=45),
+            yaxis=dict(gridcolor="rgba(255,255,255,0.05)", type="log"),
+            margin=dict(l=20, r=20, t=40, b=80),
+            height=350,
+        )
+
+        st.plotly_chart(fig_compare, use_container_width=True)
+
+
+with col_center:
+    # ===== BOARD 2: Region Selector & Details =====
+    st.markdown('<p class="section-title">시군구 선택</p>', unsafe_allow_html=True)
+
     sigungu_list = (df["SIDO_NM"] + " " + df["SIGUNGU_NM"]).tolist()
     selected_name = st.selectbox(
         "시군구 선택",
@@ -430,165 +516,175 @@ with col_select:
             (df["SIDO_NM"] == sido_nm) & (df["SIGUNGU_NM"] == sigungu_nm)
         ]["SIGUNGU_CD"].values[0]
 
-# Display selected region info
-if st.session_state.selected_sigungu:
-    region = df[df["SIGUNGU_CD"] == st.session_state.selected_sigungu].iloc[0]
+    st.markdown("---")
+    st.markdown("👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요")
 
-    # Header
-    pop_class = (
-        "pop-decrease" if region["POP_DEC_LB"] == "인구감소지역" else "pop-stable"
-    )
+    # Display selected region info
+    if st.session_state.selected_sigungu:
+        region = df[df["SIGUNGU_CD"] == st.session_state.selected_sigungu].iloc[0]
 
-    st.markdown(
-        f"""
-    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
-        <div>
-            <div class="region-name">{region['SIGUNGU_NM']}</div>
-            <div class="region-sub">{region['SIDO_NM']}</div>
+        # Header
+        pop_class = (
+            "pop-decrease" if region["POP_DEC_LB"] == "인구감소지역" else "pop-stable"
+        )
+
+        st.markdown(
+            f"""
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+            <div>
+                <div class="region-name">{region['SIGUNGU_NM']}</div>
+                <div class="region-sub">{region['SIDO_NM']}</div>
+            </div>
+            <span class="{pop_class}">{region['POP_DEC_LB']}</span>
         </div>
-        <span class="{pop_class}">{region['POP_DEC_LB']}</span>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-
-    # Info columns
-    col1, col2, col3, col4 = st.columns(4)
-
-    with col1:
-        st.markdown('<p class="section-title">기본 정보</p>', unsafe_allow_html=True)
-        basic_info = {
-            "면적": f"{region['AREA_KM2']:.1f} km²",
-            "인구 (2023)": format_number(region["POP_23"]),
-            "인구밀도": f"{region['PDEN_23']:.1f} 명/km²",
-            "가구수 (2023)": format_number(region["HHLD_23"]),
-            "평균 통근시간": f"{region['COM_T_20']:.1f}분",
-            "통근 인구": format_number(region["COM_POP_20"]),
-        }
-        display_info_table(basic_info)
-
-    with col2:
-        st.markdown(
-            '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
+        """,
+            unsafe_allow_html=True,
         )
-        facility_info = {
-            "생활시설": format_number(region["LIV_23"]),
-            "의료시설": format_number(region["MED_23"]),
-            "돌봄시설": format_number(region["CARE_23"]),
-            "교육시설": format_number(region["EDU_23"]),
-            "문화시설": format_number(region["CUL_23"]),
-            "체육시설": format_number(region["SPT_23"]),
-        }
-        display_info_table(facility_info)
 
-    with col3:
-        st.markdown(
-            '<p class="section-title">주거 현황 (2023)</p>', unsafe_allow_html=True
-        )
-        housing_info = {
-            "아파트": format_number(region["HAPT_23"]),
-            "단독주택": format_number(region["HDET_23"]),
-            "다세대": format_number(region["HMULTI_23"]),
-            "연립주택": format_number(region["HROW_23"]),
-            "영업용건물내": format_number(region["HCOMM_23"]),
-            "기타": format_number(region["HOTH_23"]),
-        }
-        display_info_table(housing_info)
+        # Info columns
+        col1, col2, col3, col4 = st.columns(4)
 
-    with col4:
-        st.markdown(
-            '<p class="section-title">통근 현황 (2020)</p>', unsafe_allow_html=True
-        )
-        commute_info = {
-            "승용차 이용": format_number(region["COM_A_P_20"]),
-            "승용차 시간": f"{region['COM_A_T_20']:.1f}분",
-            "대중교통 이용": format_number(region["COM_T_P_20"]),
-            "대중교통 시간": f"{region['COM_T_T_20']:.1f}분",
-            "기타 이용": format_number(region["COM_O_P_20"]),
-            "기타 시간": f"{region['COM_O_T_20']:.1f}분",
-        }
-        display_info_table(commute_info)
-
-    # Time series charts
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    chart_col1, chart_col2 = st.columns(2)
-
-    with chart_col1:
-        # Population density trend
-        years = list(range(2015, 2025))
-        pden_values = [region[f"PDEN_{str(y)[2:]}"] for y in years]
-
-        fig_pden = go.Figure()
-        fig_pden.add_trace(
-            go.Scatter(
-                x=years,
-                y=pden_values,
-                mode="lines+markers",
-                line=dict(color="#667eea", width=3),
-                marker=dict(size=8, color="#667eea"),
-                name="인구밀도",
+        with col1:
+            st.markdown(
+                '<p class="section-title">기본 정보</p>', unsafe_allow_html=True
             )
-        )
+            basic_info = {
+                "면적": f"{region['AREA_KM2']:.1f} km²",
+                "인구 (2023)": format_number(region["POP_23"]),
+                "인구밀도": f"{region['PDEN_23']:.1f} 명/km²",
+                "가구수 (2023)": format_number(region["HHLD_23"]),
+                "평균 통근시간": f"{region['COM_T_20']:.1f}분",
+                "통근 인구": format_number(region["COM_POP_20"]),
+            }
+            display_info_table(basic_info)
 
-        fig_pden.update_layout(
-            title=dict(
-                text="인구밀도 변화 (2015-2024)", font=dict(size=14, color="#fff")
-            ),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#888"),
-            xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
-            yaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
-            margin=dict(l=20, r=20, t=40, b=20),
-            height=250,
-            showlegend=False,
-        )
-
-        st.plotly_chart(fig_pden, use_container_width=True)
-
-    with chart_col2:
-        # Facility trend
-        years = list(range(2015, 2025))
-        liv_values = [region[f"LIV_{str(y)[2:]}"] for y in years]
-
-        fig_liv = go.Figure()
-        fig_liv.add_trace(
-            go.Scatter(
-                x=years,
-                y=liv_values,
-                mode="lines+markers",
-                line=dict(color="#81c784", width=3),
-                marker=dict(size=8, color="#81c784"),
-                name="생활시설",
+        with col2:
+            st.markdown(
+                '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
             )
+            facility_info = {
+                "생활시설": format_number(region["LIV_23"]),
+                "의료시설": format_number(region["MED_23"]),
+                "돌봄시설": format_number(region["CARE_23"]),
+                "교육시설": format_number(region["EDU_23"]),
+                "문화시설": format_number(region["CUL_23"]),
+                "체육시설": format_number(region["SPT_23"]),
+            }
+            display_info_table(facility_info)
+
+        with col3:
+            st.markdown(
+                '<p class="section-title">주거 현황 (2023)</p>', unsafe_allow_html=True
+            )
+            housing_info = {
+                "아파트": format_number(region["HAPT_23"]),
+                "단독주택": format_number(region["HDET_23"]),
+                "다세대": format_number(region["HMULTI_23"]),
+                "연립주택": format_number(region["HROW_23"]),
+                "영업용건물내": format_number(region["HCOMM_23"]),
+                "기타": format_number(region["HOTH_23"]),
+            }
+            display_info_table(housing_info)
+
+        with col4:
+            st.markdown(
+                '<p class="section-title">통근 현황 (2020)</p>', unsafe_allow_html=True
+            )
+            commute_info = {
+                "승용차 이용": format_number(region["COM_A_P_20"]),
+                "승용차 시간": f"{region['COM_A_T_20']:.1f}분",
+                "대중교통 이용": format_number(region["COM_T_P_20"]),
+                "대중교통 시간": f"{region['COM_T_T_20']:.1f}분",
+                "기타 이용": format_number(region["COM_O_P_20"]),
+                "기타 시간": f"{region['COM_O_T_20']:.1f}분",
+            }
+            display_info_table(commute_info)
+
+        # Time series charts
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        chart_col1, chart_col2 = st.columns(2)
+
+        with chart_col1:
+            # Population density trend
+            years = list(range(2015, 2025))
+            pden_values = [region[f"PDEN_{str(y)[2:]}"] for y in years]
+
+            fig_pden = go.Figure()
+            fig_pden.add_trace(
+                go.Scatter(
+                    x=years,
+                    y=pden_values,
+                    mode="lines+markers",
+                    line=dict(color="#667eea", width=3),
+                    marker=dict(size=8, color="#667eea"),
+                    name="인구밀도",
+                )
+            )
+
+            fig_pden.update_layout(
+                title=dict(
+                    text="인구밀도 변화 (2015-2024)", font=dict(size=14, color="#fff")
+                ),
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                font=dict(color="#888"),
+                xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
+                yaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
+                margin=dict(l=20, r=20, t=40, b=20),
+                height=250,
+                showlegend=False,
+            )
+
+            st.plotly_chart(fig_pden, use_container_width=True)
+
+        with chart_col2:
+            # Facility trend
+            years = list(range(2015, 2025))
+            liv_values = [region[f"LIV_{str(y)[2:]}"] for y in years]
+
+            fig_liv = go.Figure()
+            fig_liv.add_trace(
+                go.Scatter(
+                    x=years,
+                    y=liv_values,
+                    mode="lines+markers",
+                    line=dict(color="#81c784", width=3),
+                    marker=dict(size=8, color="#81c784"),
+                    name="생활시설",
+                )
+            )
+
+            fig_liv.update_layout(
+                title=dict(
+                    text="생활시설 변화 (2015-2024)", font=dict(size=14, color="#fff")
+                ),
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                font=dict(color="#888"),
+                xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
+                yaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
+                margin=dict(l=20, r=20, t=40, b=20),
+                height=250,
+                showlegend=False,
+            )
+
+            st.plotly_chart(fig_liv, use_container_width=True)
+
+    else:
+        st.markdown(
+            """
+        <div style="text-align: center; padding: 40px; color: #666;">
+            <p style="font-size: 1.2rem;">👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요</p>
+        </div>
+        """,
+            unsafe_allow_html=True,
         )
 
-        fig_liv.update_layout(
-            title=dict(
-                text="생활시설 변화 (2015-2024)", font=dict(size=14, color="#fff")
-            ),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#888"),
-            xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
-            yaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
-            margin=dict(l=20, r=20, t=40, b=20),
-            height=250,
-            showlegend=False,
-        )
 
-        st.plotly_chart(fig_liv, use_container_width=True)
-
-else:
-    st.markdown(
-        """
-    <div style="text-align: center; padding: 40px; color: #666;">
-        <p style="font-size: 1.2rem;">👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요</p>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
+with col_right:
+    # Board 3 will go here
+    pass
 
 
 # ========== Footer ==========
