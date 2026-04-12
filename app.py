@@ -320,9 +320,15 @@ def display_info_table(data_dict):
     for label, value in data_dict.items():
         cols = st.columns([1.2, 0.8])
         with cols[0]:
-            st.caption(label)
+            st.markdown(
+                f'<span style="color: #4a5568; font-size: 0.9rem;">{label}</span>',
+                unsafe_allow_html=True,
+            )
         with cols[1]:
-            st.write(f"**{value}**")
+            st.markdown(
+                f'<span style="color: #4a5568; font-weight: 600;">{value}</span>',
+                unsafe_allow_html=True,
+            )
 
 
 def get_summary_stats(data, use_average=False):
@@ -379,10 +385,10 @@ st.markdown(
     """
 <div style="padding: 5px 0 10px 0;">
     <h1 style="font-size: 1.4rem; margin-bottom: 2px;">
-        🏘️ 전국 시군구 생활SOC 현황 대시보드
+        BALANCE Index
     </h1>
     <p style="color: #718096; font-size: 0.75rem; margin: 0;">
-        2015-2024 생활인프라 시설 및 인구 변화 분석 · 시군구를 클릭하여 상세정보 확인
+        시군구를 클릭하여 상세정보 확인
     </p>
 </div>
 """,
@@ -568,9 +574,12 @@ with col_left:
                 xanchor="right",
                 x=1,
                 bgcolor="rgba(0,0,0,0)",
+                font=dict(color="#4a5568"),
             ),
-            xaxis=dict(gridcolor="#e2e8f0", tickangle=45),
-            yaxis=dict(gridcolor="#e2e8f0", type="log"),
+            xaxis=dict(
+                gridcolor="#e2e8f0", tickangle=45, tickfont=dict(color="#4a5568")
+            ),
+            yaxis=dict(gridcolor="#e2e8f0", type="log", tickfont=dict(color="#4a5568")),
             margin=dict(l=20, r=20, t=40, b=80),
             height=350,
         )
