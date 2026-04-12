@@ -169,23 +169,22 @@ st.markdown(
     
     /* Mobile & medium: stack columns */
     @media (max-width: 1280px) {
-        [data-testid="stHorizontalBlock"] {
+        /* All horizontal blocks to vertical */
+        div[data-testid="stHorizontalBlock"],
+        div[data-testid="stColumns"],
+        .stColumns,
+        .row-widget {
             flex-direction: column !important;
+            flex-wrap: wrap !important;
             gap: 1rem !important;
         }
-        [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+        /* All columns full width */
+        div[data-testid="stHorizontalBlock"] > div,
+        div[data-testid="stColumns"] > div,
+        div[data-testid="column"],
+        .stColumn {
             width: 100% !important;
-            flex: none !important;
-            min-width: 100% !important;
-            max-width: 100% !important;
-        }
-        /* col_right 내부 4컬럼도 세로 스택 */
-        [data-testid="column"] [data-testid="stHorizontalBlock"] {
-            flex-direction: column !important;
-        }
-        [data-testid="column"] [data-testid="stHorizontalBlock"] > [data-testid="column"] {
-            width: 100% !important;
-            flex: none !important;
+            flex: 0 0 100% !important;
             min-width: 100% !important;
             max-width: 100% !important;
         }
