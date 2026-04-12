@@ -171,10 +171,21 @@ st.markdown(
     @media (max-width: 1280px) {
         [data-testid="stHorizontalBlock"] {
             flex-direction: column !important;
+            gap: 1rem !important;
         }
         [data-testid="stHorizontalBlock"] > [data-testid="column"] {
             width: 100% !important;
-            flex: 1 1 100% !important;
+            flex: none !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+        }
+        /* col_right 내부 4컬럼도 세로 스택 */
+        [data-testid="column"] [data-testid="stHorizontalBlock"] {
+            flex-direction: column !important;
+        }
+        [data-testid="column"] [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+            width: 100% !important;
+            flex: none !important;
             min-width: 100% !important;
             max-width: 100% !important;
         }
