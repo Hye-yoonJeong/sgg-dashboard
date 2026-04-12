@@ -169,10 +169,14 @@ st.markdown(
     
     /* Mobile & medium: stack columns */
     @media (max-width: 1280px) {
-        [data-testid="column"] {
+        [data-testid="stHorizontalBlock"] {
+            flex-direction: column !important;
+        }
+        [data-testid="stHorizontalBlock"] > [data-testid="column"] {
             width: 100% !important;
             flex: 1 1 100% !important;
             min-width: 100% !important;
+            max-width: 100% !important;
         }
     }
     
