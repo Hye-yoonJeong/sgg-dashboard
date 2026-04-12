@@ -370,12 +370,12 @@ with col_left:
         st.markdown('<p class="section-title">전국 현황</p>', unsafe_allow_html=True)
         total_stats = get_summary_stats(df, use_average=False)
         display_info_table(total_stats)
-        st.markdown("---")
-        st.markdown(
-            '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
-        )
-        facility_stats = get_facility_stats(df, use_average=False)
-        display_info_table(facility_stats)
+        # st.markdown("---")
+        # st.markdown(
+        #     '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
+        # )
+        # facility_stats = get_facility_stats(df, use_average=False)
+        # display_info_table(facility_stats)
 
     with tab2:
         st.markdown(
@@ -384,12 +384,12 @@ with col_left:
         pop_dec_df = df[df["POP_DEC_LB"] == "인구감소지역"]
         dec_stats = get_summary_stats(pop_dec_df, use_average=True)
         display_info_table(dec_stats)
-        st.markdown("---")
-        st.markdown(
-            '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
-        )
-        dec_facility = get_facility_stats(pop_dec_df, use_average=True)
-        display_info_table(dec_facility)
+        # st.markdown("---")
+        # st.markdown(
+        #     '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
+        # )
+        # dec_facility = get_facility_stats(pop_dec_df, use_average=True)
+        # display_info_table(dec_facility)
 
     with tab3:
         st.markdown(
@@ -398,12 +398,12 @@ with col_left:
         non_dec_df = df[df["POP_DEC_LB"] == "비인구감소지역"]
         non_stats = get_summary_stats(non_dec_df, use_average=True)
         display_info_table(non_stats)
-        st.markdown("---")
-        st.markdown(
-            '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
-        )
-        non_facility = get_facility_stats(non_dec_df, use_average=True)
-        display_info_table(non_facility)
+        # st.markdown("---")
+        # st.markdown(
+        #     '<p class="section-title">시설 현황 (2023)</p>', unsafe_allow_html=True
+        # )
+        # non_facility = get_facility_stats(non_dec_df, use_average=True)
+        # display_info_table(non_facility)
 
     with tab4:
         st.markdown(
