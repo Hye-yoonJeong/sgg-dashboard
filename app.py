@@ -688,6 +688,79 @@ with col_center:
             use_container_width=True,
             config={"responsive": True, "displayModeBar": False},
         )
+
+        # 가구수 대비 주택수 순위
+        st.markdown("---")
+        st.markdown(
+            f'<p class="section-title">{sido_nm} 가구수 대비 주택수 순위</p>',
+            unsafe_allow_html=True,
+        )
+
+        # 주택수 / 가구수 비율 계산
+        sido_df["HOUSE_RATIO"] = (
+            sido_df["HAPT_23"]
+            + sido_df["HDET_23"]
+            + sido_df["HMULTI_23"]
+            + sido_df["HROW_23"]
+            + sido_df["HCOMM_23"]
+            + sido_df["HOTH_23"]
+        ) / sido_df["HHLD_23"]
+
+        sido_df_house = sido_df.sort_values("HOUSE_RATIO", ascending=False).reset_index(
+            drop=True
+        )
+        sido_df_house["순위"] = range(1, len(sido_df_house) + 1)
+
+        current_rank_house = sido_df_house[
+            sido_df_house["SIGUNGU_CD"] == st.session_state.selected_sigungu
+        ]["순위"].values[0]
+
+        st.write(
+            f"**{region['SIGUNGU_NM']}**: {current_rank_house}위 / {len(sido_df_house)}개 시군구"
+        )
+
+        # 가구대비 주택수 바차트
+        fig_house = go.Figure()
+
+        colors_house = [
+            "#f87171" if cd == st.session_state.selected_sigungu else "#cbd5e1"
+            for cd in sido_df_house["SIGUNGU_CD"]
+        ]
+
+        fig_house.add_trace(
+            go.Bar(
+                x=sido_df_house["SIGUNGU_NM"],
+                y=sido_df_house["HOUSE_RATIO"],
+                marker_color=colors_house,
+            )
+        )
+
+        fig_house.update_layout(
+            paper_bgcolor="#ffffff",
+            plot_bgcolor="#ffffff",
+            font=dict(color="#4a5568", size=10),
+            xaxis=dict(
+                gridcolor="#e2e8f0", tickangle=45, tickfont=dict(color="#4a5568")
+            ),
+            yaxis=dict(
+                gridcolor="#e2e8f0",
+                title=dict(text="주택수/가구수", font=dict(color="#4a5568")),
+                tickfont=dict(color="#4a5568"),
+            ),
+            margin=dict(l=20, r=20, t=20, b=80),
+            height=200,
+            showlegend=False,
+            dragmode=False,
+        )
+
+        fig_house.update_traces(hovertemplate="%{x}: %{y:.2f}<extra></extra>")
+
+        st.plotly_chart(
+            fig_house,
+            use_container_width=True,
+            config={"responsive": True, "displayModeBar": False},
+        )
+
     else:
         st.markdown("👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요")
 
@@ -816,7 +889,7 @@ with col_right:
                     fixedrange=True,
                 ),
                 margin=dict(l=20, r=20, t=40, b=20),
-                height=150,
+                height=300,
                 showlegend=False,
                 dragmode=False,
             )
@@ -865,7 +938,7 @@ with col_right:
                     fixedrange=True,
                 ),
                 margin=dict(l=20, r=20, t=40, b=20),
-                height=150,
+                height=300,
                 showlegend=False,
                 dragmode=False,
             )
