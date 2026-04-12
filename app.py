@@ -562,9 +562,8 @@ with col_center:
             ),
             yaxis=dict(
                 gridcolor="#e2e8f0",
-                title="인구밀도 (명/km²)",
+                title=dict(text="인구밀도 (명/km²)", font=dict(color="#4a5568")),
                 tickfont=dict(color="#4a5568"),
-                titlefont=dict(color="#4a5568"),
             ),
             margin=dict(l=20, r=20, t=20, b=80),
             height=300,
