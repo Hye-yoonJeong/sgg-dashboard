@@ -190,30 +190,30 @@ st.markdown(
         }
     }
     
-    /* Chart containers responsive height */
+    /* Force fit in viewport */
     @media (min-width: 1600px) {
-        /* 지도 */
-        [data-testid="column"]:first-child .stPlotlyChart {
-            height: 45vh !important;
-        }
-        [data-testid="column"]:first-child .stPlotlyChart > div {
-            height: 45vh !important;
+        .main > div {
+            max-height: 100vh;
+            overflow: hidden;
         }
         
-        /* 랭킹 차트 */
-        [data-testid="column"]:nth-child(2) .stPlotlyChart {
-            height: 30vh !important;
-        }
-        [data-testid="column"]:nth-child(2) .stPlotlyChart > div {
-            height: 30vh !important;
+        .block-container {
+            max-height: calc(100vh - 50px);
+            overflow: hidden;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
         }
         
-        /* 시계열 차트 */
-        [data-testid="column"]:nth-child(3) .stPlotlyChart {
-            height: 15vh !important;
+        /* Scale all plotly charts */
+        .stPlotlyChart {
+            max-height: 35vh;
         }
-        [data-testid="column"]:nth-child(3) .stPlotlyChart > div {
-            height: 15vh !important;
+        
+        .stPlotlyChart iframe,
+        .stPlotlyChart > div,
+        .js-plotly-plot {
+            max-height: 35vh !important;
+            height: auto !important;
         }
     }
     
@@ -441,7 +441,7 @@ with col_left:
             font=dict(color="white", size=11),
             title="",
         ),
-        height=450,
+        height=280,
     )
 
     selected = st.plotly_chart(
@@ -572,7 +572,7 @@ with col_left:
             xaxis=dict(gridcolor="#e2e8f0", tickangle=45),
             yaxis=dict(gridcolor="#e2e8f0", type="log"),
             margin=dict(l=20, r=20, t=40, b=80),
-            height=350,
+            height=180,
         )
 
         st.plotly_chart(
@@ -670,7 +670,7 @@ with col_center:
                 tickfont=dict(color="#4a5568"),
             ),
             margin=dict(l=20, r=20, t=20, b=80),
-            height=300,
+            height=180,
             showlegend=False,
         )
 
@@ -807,7 +807,7 @@ with col_right:
                     fixedrange=True,
                 ),
                 margin=dict(l=20, r=20, t=40, b=20),
-                height=150,
+                height=100,
                 showlegend=False,
                 dragmode=False,
             )
@@ -856,7 +856,7 @@ with col_right:
                     fixedrange=True,
                 ),
                 margin=dict(l=20, r=20, t=40, b=20),
-                height=150,
+                height=100,
                 showlegend=False,
                 dragmode=False,
             )
