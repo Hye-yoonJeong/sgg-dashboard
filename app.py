@@ -418,7 +418,11 @@ with col_left:
     )
 
     selected = st.plotly_chart(
-        fig, use_container_width=True, on_select="rerun", key="map"
+        fig,
+        use_container_width=True,
+        config={"responsive": True, "displayModeBar": False},
+        on_select="rerun",
+        key="map",
     )
 
     if selected and selected.selection and selected.selection.points:
@@ -544,7 +548,11 @@ with col_left:
             height=350,
         )
 
-        st.plotly_chart(fig_compare, use_container_width=True)
+        st.plotly_chart(
+            fig_compare,
+            use_container_width=True,
+            config={"responsive": True, "displayModeBar": False},
+        )
 
 
 with col_center:
@@ -639,7 +647,11 @@ with col_center:
             showlegend=False,
         )
 
-        st.plotly_chart(fig_rank, use_container_width=True)
+        st.plotly_chart(
+            fig_rank,
+            use_container_width=True,
+            config={"responsive": True, "displayModeBar": False},
+        )
     else:
         st.markdown("👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요")
 
@@ -775,7 +787,11 @@ with col_right:
 
             fig_pden.update_traces(hovertemplate="%{x}: %{y:.1f}<extra></extra>")
 
-            st.plotly_chart(fig_pden, use_container_width=True)
+            st.plotly_chart(
+                fig_pden,
+                use_container_width=True,
+                config={"responsive": True, "displayModeBar": False},
+            )
 
         with chart_col2:
             # Facility trend
@@ -820,7 +836,11 @@ with col_right:
 
             fig_liv.update_traces(hovertemplate="%{x}: %{y:.0f}<extra></extra>")
 
-            st.plotly_chart(fig_liv, use_container_width=True)
+            st.plotly_chart(
+                fig_liv,
+                use_container_width=True,
+                config={"responsive": True, "displayModeBar": False},
+            )
 
 # ========== Footer ==========
 st.markdown(
