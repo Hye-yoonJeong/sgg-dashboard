@@ -117,9 +117,26 @@ st.markdown(
     header {visibility: hidden;}
     
     .block-container {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
         max-width: 100%;
+    }
+
+    /* Desktop: fit in viewport, no scroll */
+    @media (min-width: 768px) {
+        .main .block-container {
+            max-height: 100vh;
+            overflow: hidden;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+    }
+
+    /* Mobile: allow scroll */
+    @media (max-width: 767px) {
+        .main .block-container {
+            overflow-y: auto;
+        }
     }
     
     /* Metric styling */
@@ -282,11 +299,11 @@ if "selected_sigungu" not in st.session_state:
 # ========== Header ==========
 st.markdown(
     """
-<div style="padding: 10px 0 20px 0;">
-    <h1 style="font-size: 1.8rem; margin-bottom: 4px;">
+<div style="padding: 5px 0 10px 0;">
+    <h1 style="font-size: 1.4rem; margin-bottom: 2px;">
         🏘️ 전국 시군구 생활SOC 현황 대시보드
     </h1>
-    <p style="color: #666; font-size: 0.9rem; margin: 0;">
+    <p style="color: #718096; font-size: 0.75rem; margin: 0;">
         2015-2024 생활인프라 시설 및 인구 변화 분석 · 시군구를 클릭하여 상세정보 확인
     </p>
 </div>
@@ -742,9 +759,8 @@ with col_right:
 # ========== Footer ==========
 st.markdown(
     """
-<div style="text-align: center; padding: 30px 0 10px 0; color: #444; font-size: 0.75rem;">
-    <p>Data: SGIS/KOSIS | Built with Streamlit & Plotly</p>
-    <p>© 2026 서울대학교 USDL</p>
+<div style="text-align: center; padding: 5px 0; color: #718096; font-size: 0.65rem;">
+    Data: SGIS/KOSIS | © 2026 서울대학교 USDL
 </div>
 """,
     unsafe_allow_html=True,
