@@ -479,12 +479,10 @@ with col_left:
 
 
 with col_center:
-    # Board 2 will go here
     st.markdown('<p class="section-title">시군구 선택</p>', unsafe_allow_html=True)
 
     sigungu_list = (df["SIDO_NM"] + " " + df["SIGUNGU_NM"]).tolist()
 
-    # 현재 선택된 시군구의 인덱스 찾기
     default_index = 0
     if st.session_state.selected_sigungu:
         selected_row = df[df["SIGUNGU_CD"] == st.session_state.selected_sigungu]
@@ -515,7 +513,67 @@ with col_center:
             st.rerun()
 
     st.markdown("---")
-    st.markdown("👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요")
+
+    # 선택된 시군구가 있으면 랭킹 표시, 없으면 안내 메시지
+    if st.session_state.selected_sigungu:
+        region = df[df["SIGUNGU_CD"] == st.session_state.selected_sigungu].iloc[0]
+        sido_nm = region["SIDO_NM"]
+
+        # 해당 시도 내 인구밀도 랭킹
+        sido_df = df[df["SIDO_NM"] == sido_nm].copy()
+        sido_df = sido_df.sort_values("PDEN_23", ascending=False).reset_index(drop=True)
+        sido_df["순위"] = range(1, len(sido_df) + 1)
+
+        st.markdown(
+            f'<p class="section-title">{sido_nm} 인구밀도 순위</p>',
+            unsafe_allow_html=True,
+        )
+
+        # 현재 선택된 시군구 순위 찾기
+        current_rank = sido_df[
+            sido_df["SIGUNGU_CD"] == st.session_state.selected_sigungu
+        ]["순위"].values[0]
+        st.write(
+            f"**{region['SIGUNGU_NM']}**: {current_rank}위 / {len(sido_df)}개 시군구"
+        )
+
+        # 랭킹 바차트
+        fig_rank = go.Figure()
+
+        colors = [
+            "#f87171" if cd == st.session_state.selected_sigungu else "#cbd5e1"
+            for cd in sido_df["SIGUNGU_CD"]
+        ]
+
+        fig_rank.add_trace(
+            go.Bar(
+                x=sido_df["SIGUNGU_NM"],
+                y=sido_df["PDEN_23"],
+                marker_color=colors,
+            )
+        )
+
+        fig_rank.update_layout(
+            paper_bgcolor="#f8f9fa",
+            plot_bgcolor="#ffffff",
+            font=dict(color="#4a5568", size=10),
+            xaxis=dict(
+                gridcolor="#e2e8f0", tickangle=45, tickfont=dict(color="#4a5568")
+            ),
+            yaxis=dict(
+                gridcolor="#e2e8f0",
+                title="인구밀도 (명/km²)",
+                tickfont=dict(color="#4a5568"),
+                titlefont=dict(color="#4a5568"),
+            ),
+            margin=dict(l=20, r=20, t=20, b=80),
+            height=300,
+            showlegend=False,
+        )
+
+        st.plotly_chart(fig_rank, use_container_width=True)
+    else:
+        st.markdown("👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요")
 
 
 with col_right:
@@ -625,13 +683,18 @@ with col_right:
 
             fig_pden.update_layout(
                 title=dict(
-                    text="인구밀도 변화 (2015-2024)", font=dict(size=14, color="#fff")
+                    text="인구밀도 변화 (2015-2024)",
+                    font=dict(size=14, color="#2d3748"),
                 ),
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#888"),
-                xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
-                yaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
+                paper_bgcolor="#f8f9fa",
+                plot_bgcolor="#ffffff",
+                font=dict(color="#4a5568"),
+                xaxis=dict(
+                    gridcolor="#e2e8f0", tickfont=dict(size=10, color="#4a5568")
+                ),
+                yaxis=dict(
+                    gridcolor="#e2e8f0", tickfont=dict(size=10, color="#4a5568")
+                ),
                 margin=dict(l=20, r=20, t=40, b=20),
                 height=250,
                 showlegend=False,
@@ -658,29 +721,24 @@ with col_right:
 
             fig_liv.update_layout(
                 title=dict(
-                    text="생활시설 변화 (2015-2024)", font=dict(size=14, color="#fff")
+                    text="생활시설 변화 (2015-2024)",
+                    font=dict(size=14, color="#2d3748"),
                 ),
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#888"),
-                xaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
-                yaxis=dict(gridcolor="rgba(255,255,255,0.05)", tickfont=dict(size=10)),
+                paper_bgcolor="#f8f9fa",
+                plot_bgcolor="#ffffff",
+                font=dict(color="#4a5568"),
+                xaxis=dict(
+                    gridcolor="#e2e8f0", tickfont=dict(size=10, color="#4a5568")
+                ),
+                yaxis=dict(
+                    gridcolor="#e2e8f0", tickfont=dict(size=10, color="#4a5568")
+                ),
                 margin=dict(l=20, r=20, t=40, b=20),
                 height=250,
                 showlegend=False,
             )
 
             st.plotly_chart(fig_liv, use_container_width=True)
-
-    else:
-        st.markdown(
-            """
-        <div style="text-align: center; padding: 40px; color: #666;">
-            <p style="font-size: 1.2rem;">👆 지도에서 시군구를 클릭하거나 위 드롭다운에서 선택하세요</p>
-        </div>
-        """,
-            unsafe_allow_html=True,
-        )
 
 # ========== Footer ==========
 st.markdown(
