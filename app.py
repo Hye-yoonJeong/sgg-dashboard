@@ -2,6 +2,10 @@
 전국 시군구 생활SOC 현황 대시보드
 Korean SGG Living Infrastructure Dashboard
 With Interactive Map - Native Streamlit Components
+
+CLI 사용법:
+  # 가상환경 설정
+  GEO\Scripts\activate
 """
 
 import streamlit as st
@@ -12,8 +16,7 @@ import json
 
 # ========== Page Config ==========
 st.set_page_config(
-    page_title="생활SOC 현황 대시보드",
-    page_icon="🏘️",
+    page_title="BALANCE Index",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
